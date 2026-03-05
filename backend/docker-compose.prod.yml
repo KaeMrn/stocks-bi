@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    networks:
+      - default
+      - monitoring_net
+
+  web:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.stock-s.fr`)"
+      - "traefik.http.routers.api.entrypoints=websecure"
+      - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.services.api.loadbalancer.server.port=8080"
+    networks:
+      - default
+      - monitoring_net
+
+  migrate:
+    networks:
+      - default
+
+  seed:
+    networks:
+      - default
+
+  pgadmin:
+    networks:
+      - default
+      - monitoring_net
+
+networks:
+  monitoring_net:
+    external: true
