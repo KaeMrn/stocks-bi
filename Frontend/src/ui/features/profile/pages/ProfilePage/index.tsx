@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/ui/components/common/Toast";
 import { useAuth, clearAuthToken, getAuthToken } from "@/ui/features/auth/hooks/useAuth";
@@ -13,12 +13,6 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const { addToast } = useToast();
   const { isAuthenticated, firstname, lastname } = useAuth();
-
-  // État pour les informations personnelles
-  const [userInfo] = useState({
-    firstname: firstname,
-    lastname: lastname,
-  });
 
   // État pour le changement d'email
   const [emailForm, setEmailForm] = useState({
@@ -35,17 +29,17 @@ export default function ProfilePage() {
   });
   const [passwordStatus, setPasswordStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setEmailForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setPasswordForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleEmailSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleEmailSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setEmailStatus("loading");
 
@@ -63,7 +57,7 @@ export default function ProfilePage() {
     setEmailForm({ email: "", confirmEmail: "" });
   };
 
-  const handlePasswordSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handlePasswordSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setPasswordStatus("loading");
 
@@ -107,25 +101,19 @@ export default function ProfilePage() {
       {/* Informations personnelles */}
       <section className="p-6 bg-white rounded-lg border border-neutral-200 shadow-sm">
         <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t("profile.personal_info.title", "Informations personnelles")}</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">{t("profile.personal_info.firstname", "Prénom")}</label>
-            <Input
-              type="text"
-              value={userInfo.firstname}
-              disabled
-              className="bg-neutral-50"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-1">{t("profile.personal_info.lastname", "Nom")}</label>
-            <Input
-              type="text"
-              value={userInfo.lastname}
-              disabled
-              className="bg-neutral-50"
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            label={t("profile.personal_info.firstname", "Prénom")}
+            value={firstname}
+            disabled
+            className="bg-neutral-50"
+          />
+          <Input
+            label={t("profile.personal_info.lastname", "Nom")}
+            value={lastname}
+            disabled
+            className="bg-neutral-50"
+          />
         </div>
       </section>
 
